@@ -4,10 +4,11 @@ import { onMounted, ref, watch } from 'vue'
 import { toast } from 'vue3-toastify'
 import { useRoute } from 'vue-router'
 import { fetchCardsByBoardId } from '@/services/board/card/card.service'
-import CustomButton from '@/components/common/CustomButton.vue'
 import CustomModal from '@/components/common/CustomModal.vue'
 import ListForm from '@/components/forms/ListForm.vue'
 import ListArea from '@/components/boards/list/ListArea.vue'
+import BoardHeader from '@/components/boards/BoardHeader.vue'
+import InviteMemberForm from '@/components/forms/InviteMemberForm.vue'
 
 const route = useRoute()
 
@@ -15,6 +16,7 @@ const lists = ref([])
 const cards = ref([])
 const board = ref({})
 const isAddModalOpen = ref(false)
+const isAddMemberModelOpen = ref(false)
 const editingList = ref(null)
 
 const getBoardLists = async () => {
@@ -59,6 +61,14 @@ const handleAddCardClick = () => {
   isAddModalOpen.value = true
 }
 
+const onAddMember = () => {
+  isAddMemberModelOpen.value = true
+}
+
+const onCloseAddMember = () => {
+  isAddMemberModelOpen.value = false
+}
+
 const handleEditList = (list) => {
   editingList.value = list
   handleAddCardClick()
@@ -71,14 +81,8 @@ const onListAddSuccess = async () => {
 </script>
 
 <template>
-  <div class="container px-2 py-4 max-w-full flex justify-between items-center mb-5">
-    <div></div>
-    <h2 class="font-bold text-3xl capitalize">{{ board?.title }}</h2>
-    <div class="mr-5">
-      <CustomButton @click="handleAddCardClick"> Add List </CustomButton>
-    </div>
-  </div>
-  <div class="container px-4 py-4 max-w-full overflow-x-auto min-h-full flex gap-3">
+  <BoardHeader :handleAddCardClick="handleAddCardClick" :board="board" :onAddMember="onAddMember" />
+  <div class="container p-4 max-w-full overflow-x-auto min-h-full flex gap-3">
     <ListArea
       :getCards="getCards"
       :boardId="route.params.boardId"
@@ -98,6 +102,20 @@ const onListAddSuccess = async () => {
         :onSubmitSuccess="onListAddSuccess"
         :data="editingList"
       />
+    </div>
+  </CustomModal>
+  <CustomModal
+    :isAddModalOpen="isAddMemberModelOpen"
+    :handleCloseModal="onCloseAddMember"
+    title="Invite Team member"
+  >
+    <div class="mt-2">
+      <!-- <ListForm
+        :boardId="route.params.boardId"
+        :onSubmitSuccess="onListAddSuccess"
+        :data="editingList"
+      /> -->
+      <InviteMemberForm />
     </div>
   </CustomModal>
 </template>

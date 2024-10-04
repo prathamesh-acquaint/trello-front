@@ -13,7 +13,7 @@ const props = defineProps({
   >
     <div class="relative bg-white rounded-lg p-4 w-[500px] h-fit">
       <div class="relative">
-        <p class="font-bold text-3xl text-center">{{ props.title }}</p>
+        <p class="font-semibold text-2xl text-center">{{ props.title }}</p>
         <span
           class="absolute top-0 right-0 px-2 py-1 cursor-pointer font-bold hover:bg-gray-300 rounded-md"
           @click="props.handleCloseModal"
